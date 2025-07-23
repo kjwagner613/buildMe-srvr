@@ -31,6 +31,17 @@ Begin mid-action. Avoid repeating input text verbatim. Use sensory details, dyna
     const rawText = await hfResponse.text();
     console.log('🧨 Raw HF response:', rawText);
 
+    if (!hfResponse.ok) {
+      // Surface API errors for debugging
+      return {
+        statusCode: hfResponse.status,
+        body: JSON.stringify({
+          error: `Hugging Face API returned status ${hfResponse.status}`,
+          details: rawText
+        })
+      };
+    }
+
     let parsed;
     try {
       parsed = JSON.parse(rawText);
@@ -38,7 +49,7 @@ Begin mid-action. Avoid repeating input text verbatim. Use sensory details, dyna
       console.error('💥 Failed to parse JSON:', e);
       return {
         statusCode: 500,
-        body: JSON.stringify({ error: 'Invalid JSON returned from Hugging Face.' })
+        body: JSON.stringify({ error: 'Invalid JSON returned from Hugging Face.', details: rawText })
       };
     }
 

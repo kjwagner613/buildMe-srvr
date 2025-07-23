@@ -13,9 +13,12 @@ document.getElementById('generateBtn').addEventListener('click', async () => {
     });
 
     const data = await response.json();
-    const story = data.text || '⚠️ No response from model.';
-
-    document.getElementById('output').textContent = story;
+    if (!response.ok || data.error) {
+      const msg = data.details ? `${data.error}\n${data.details}` : (data.error || '⚠️ No response from model.');
+      document.getElementById('output').textContent = msg;
+    } else {
+      document.getElementById('output').textContent = data.text;
+    }
   } catch (err) {
     document.getElementById('output').textContent = '🔥 Something went wrong.';
     console.error('🧨 Form submission error:', err);
