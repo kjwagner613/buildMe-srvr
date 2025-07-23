@@ -27,10 +27,10 @@ Begin mid-action. Avoid repeating input text verbatim. Use sensory details, dyna
         });
 
         const result = await hfResponse.json();
-
+        console.log('🐾 Hugging Face response:', result);
         return {
             statusCode: 200,
-            body: JSON.stringify({ text: result?.generated_text || '⚠️ No response from model.' })
+            body: JSON.stringify({ text: result?.[0]?.generated_text || '⚠️ No response from model.' })
         };
     } catch (err) {
         console.error('🔥 Hugging Face error:', err);
