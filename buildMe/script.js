@@ -1,5 +1,6 @@
 document.getElementById('generateBtn').addEventListener('click', async () => {
   const prompt = document.getElementById('prompt').value;
+  const tone = document.getElementById('tone').value;
   const scene = document.getElementById('scene').value;
   const dialogue = document.getElementById('dialogue').value;
   const styleInput = document.getElementById('style').value;
@@ -8,7 +9,7 @@ document.getElementById('generateBtn').addEventListener('click', async () => {
     const response = await fetch('/.netlify/functions/generate', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ prompt, scene, dialogue, styleInput, tone: styleInput })
+      body: JSON.stringify({ prompt, tone, scene, dialogue, styleInput })
     });
 
     const data = await response.json();

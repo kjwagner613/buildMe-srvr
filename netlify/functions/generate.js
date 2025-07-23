@@ -17,6 +17,7 @@ exports.handler = async function (event, context) {
 You are an expert fiction writer. Write a vivid, emotionally charged story scene using the following elements:
 
 Prompt: ${prompt}
+Tone: ${tone}
 Scene: ${scene}
 Dialogue and emotion: ${dialogue}
 Style notes: ${styleInput}
