@@ -26,12 +26,24 @@ Begin mid-action. Avoid repeating input text verbatim. Use sensory details, dyna
             })
         });
 
-        const result = await hfResponse.json();
-        console.log('🐾 Hugging Face response:', result);
-        return {
-            statusCode: 200,
-            body: JSON.stringify({ text: result?.[0]?.generated_text || '⚠️ No response from model.' })
-        };
+       const rawText = await hfResponse.text();
+console.log('🧨 Raw Hugging Face response:', rawText);
+
+let parsed;
+try {
+  parsed = JSON.parse(rawText);
+} catch (e) {
+  console.error('💥 Failed to parse JSON from Hugging Face:', e);
+  return {
+    statusCode: 500,
+    body: JSON.stringify({ error: 'Invalid JSON returned from Hugging Face.' })
+  };
+}
+
+return {
+  statusCode: 200,
+  body: JSON.stringify({ text: parsed?.[0]?.generated_text || '⚠️ No response from model.' })
+};
     } catch (err) {
         console.error('🔥 Hugging Face error:', err);
         return {
