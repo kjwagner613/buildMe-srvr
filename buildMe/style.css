@@ -1,0 +1,19 @@
+body {
+  font-family: sans-serif;
+  margin: 40px;
+  background: #f4f4f4;
+  color: #333;
+}
+
+textarea {
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+button {
+  padding: 10px 20px;
+  background-color: #444;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
