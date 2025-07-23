@@ -12,15 +12,27 @@ document.getElementById('generateBtn').addEventListener('click', async () => {
       body: JSON.stringify({ prompt, tone, scene, dialogue, styleInput })
     });
 
-    const data = await response.json();
-    if (!response.ok || data.error) {
-      const msg = data.details ? `${data.error}\n${data.details}` : (data.error || '⚠️ No response from model.');
-      document.getElementById('output').textContent = msg;
+    const out = document.getElementById('output');
+    const raw = await response.text();
+    if (!response.ok) {
+      out.value = `HTTP ${response.status}\n${raw}`;
+      return;
+    }
+    let data;
+    try {
+      data = JSON.parse(raw);
+    } catch (e) {
+      out.value = `Invalid JSON from function:\n${raw}`;
+      return;
+    }
+    if (data.error) {
+      out.value = data.details ? `${data.error}\n${data.details}` : data.error;
     } else {
-      document.getElementById('output').textContent = data.text;
+      out.value = data.text;
     }
   } catch (err) {
-    document.getElementById('output').textContent = '🔥 Something went wrong.';
+    const out = document.getElementById('output');
+    out.value = `🔥 Fetch error: ${err.message}`;
     console.error('🧨 Form submission error:', err);
   }
 });

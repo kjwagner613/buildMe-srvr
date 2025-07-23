@@ -4,6 +4,9 @@ const MODEL_URL = 'https://api-inference.huggingface.co/models/gpt2';
 
 exports.handler = async function (event, context) {
   const { prompt, tone, scene, dialogue, styleInput } = JSON.parse(event.body || '{}');
+  // Debug: ensure MODEL_URL and token are set correctly
+  console.log('🔧 MODEL_URL:', MODEL_URL);
+  console.log('🔑 HFTOKEN defined:', !!HF_TOKEN);
 
   try {
     const hfResponse = await fetch(MODEL_URL, {
