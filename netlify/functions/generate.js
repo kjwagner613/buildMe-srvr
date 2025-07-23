@@ -4,9 +4,11 @@ const MODEL_URL = 'https://api-inference.huggingface.co/models/gpt2';
 
 exports.handler = async function (event, context) {
   const { prompt, tone, scene, dialogue, styleInput } = JSON.parse(event.body || '{}');
-  // Debug: ensure MODEL_URL and token are set correctly
-  console.log('🔧 MODEL_URL:', MODEL_URL);
-  console.log('🔑 HFTOKEN defined:', !!HF_TOKEN);
+  // Debug info to return on errors
+  const __debug = {
+    model_url: MODEL_URL,
+    token_defined: !!HF_TOKEN
+  };
 
   try {
     const hfResponse = await fetch(MODEL_URL, {
@@ -35,12 +37,13 @@ Begin mid-action. Avoid repeating input text verbatim. Use sensory details, dyna
     console.log('🧨 Raw HF response:', rawText);
 
     if (!hfResponse.ok) {
-      // Surface API errors for debugging
+      // Surface API errors with debug info
       return {
         statusCode: hfResponse.status,
         body: JSON.stringify({
           error: `Hugging Face API returned status ${hfResponse.status}`,
-          details: rawText
+          details: rawText,
+          ...__debug
         })
       };
     }
@@ -52,7 +55,11 @@ Begin mid-action. Avoid repeating input text verbatim. Use sensory details, dyna
       console.error('💥 Failed to parse JSON:', e);
       return {
         statusCode: 500,
-        body: JSON.stringify({ error: 'Invalid JSON returned from Hugging Face.', details: rawText })
+        body: JSON.stringify({
+          error: 'Invalid JSON returned from Hugging Face.',
+          details: rawText,
+          ...__debug
+        })
       };
     }
 
